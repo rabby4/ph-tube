@@ -2,7 +2,6 @@ const categoryHandler = async () =>{
     const res = await fetch("https://openapi.programming-hero.com/api/videos/categories");
     const data = await res.json();
     const categories = data.data;
-    // console.log(categories)
 
     const categoryMenuContainer = document.getElementById('category-menu-container')
     categories.forEach(category => {
@@ -11,7 +10,7 @@ const categoryHandler = async () =>{
         li.innerHTML = `
         <a onclick="videosHandler('${category.category_id}')" class="bg-gray-200 hover:bg-red-600 hover:text-white">${category.category}</a>
         `;
-        categoryMenuContainer.appendChild(li)
+        categoryMenuContainer.appendChild(li);
     });
     
 }
@@ -20,7 +19,7 @@ const videosHandler = async (categoryId) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${categoryId}`);
     const data = await res.json();
     const videosData = data.data;
-    console.log(videosData);
+    
 
     const videoContainer = document.getElementById('video-container');
     videoContainer.innerHTML = "";
@@ -30,12 +29,19 @@ const videosHandler = async (categoryId) => {
         emptySection.classList.remove('hidden');
     }else{
         videosData.forEach((video) => {
+            console.log(video);
+            const hrs = Math.floor(video.others.posted_date / 3600);
+            const min = Math.round((video.others.posted_date - (hrs * 3600)) / 60);
+
             const div = document.createElement('div');
             div.classList = ('card card-compact bg-base-100 shadow rounded-md');
             div.innerHTML = `
-            <figure>
+            <figure class="relative">
                 <img
                 src="${video.thumbnail}" class="w-full h-52 rounded-lg" />
+                <div class="absolute right-2 bottom-2">
+                    <p id="duration" class="text-sm ${video.others.posted_date ? 'bg-black' : 'bg-transparent'} text-white py-1 px-3 rounded-md">${video.others.posted_date ? hrs + " hours " + min + " minutes " : ''}</p>
+                </div>
             </figure>
             <div class="card-body">
                 <div class="flex gap-5">
@@ -43,7 +49,7 @@ const videosHandler = async (categoryId) => {
                         <img
                         src="${video.authors[0].profile_picture}"
                         alt=""
-                        class="w-12 h-12 rounded-full" />
+                        class="w-12 h-12 rounded-full" />  
                     </div>
                     <div>
                         <h2 class="text-xl font-semibold">${video.title}</h2>
@@ -56,12 +62,13 @@ const videosHandler = async (categoryId) => {
                 
             </div>
             `;
-            videoContainer.appendChild(div)
+            videoContainer.appendChild(div);
         })
+        
     }
 
-
 }
+
 
 categoryHandler()
 videosHandler("1000")

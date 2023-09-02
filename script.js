@@ -3,14 +3,14 @@ const categoryHandler = async () =>{
     const data = await res.json();
     const categories = data.data;
 
-    const categoryMenuContainer = document.getElementById('category-menu-container')
+    const categoryContainer = document.getElementById('category-container');
     categories.forEach(category => {
-        const li = document.createElement('li');
-        li.classList = ('mx-5 bg-orange-600')
-        li.innerHTML = `
-        <a onclick="videosHandler('${category.category_id}')" class="bg-gray-200 hover:bg-red-600 hover:text-white py-2 px-9 rounded-md cursor-pointer">${category.category}</a>
+        const div = document.createElement('div');
+        div.classList = ('mx-5');
+        div.innerHTML = `
+        <button onclick="videosHandler('${category.category_id}')" class="bg-gray-200 hover:bg-red-600 hover:text-white focus:bg-red-600 focus:text-white py-2 px-9 rounded-md cursor-pointer">${category.category}</button>
         `;
-        categoryMenuContainer.appendChild(li);
+        categoryContainer.appendChild(div);
     });
     
 }
@@ -19,7 +19,6 @@ const videosHandler = async (categoryId) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${categoryId}`);
     const data = await res.json();
     const videosData = data.data;
-    console.log(videosData)
 
     const videoContainer = document.getElementById('video-container');
     videoContainer.innerHTML = "";
@@ -60,7 +59,6 @@ const videosHandler = async (categoryId) => {
         videoContainer.appendChild(div);
     })
 
-   
     const emptySection = document.getElementById('empty-section');
     if(videosData.length === 0){
         emptySection.classList.remove('hidden');
@@ -68,6 +66,7 @@ const videosHandler = async (categoryId) => {
         emptySection.classList.add('hidden')
     }
 }
+
 
 
 document.getElementById('short-btn').addEventListener('click', function() {
@@ -78,7 +77,7 @@ document.getElementById('short-btn').addEventListener('click', function() {
         const videosData = data.data;
         console.log(videosData);
 
-        const sortedData = videosData.sort((a, b) => {
+        videosData.sort((a, b) => {
             const aViews = parseInt(a.others.views);
             const bViews = parseInt(b.others.views);
               return bViews - aViews
@@ -132,9 +131,8 @@ document.getElementById('short-btn').addEventListener('click', function() {
         }
     }
 
-    videosHandler("1000")
+    videosHandler("1000 ")
 })
-
 
 categoryHandler();
 videosHandler("1000");
